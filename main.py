@@ -15,6 +15,7 @@ class Neuron1D:
         self.epsilon = epsilon
         self.raw_data = raw_data = np.genfromtxt(csv_path, delimiter=",")
         self.x = x = raw_data[:, 0]
+        self.x = (self.x - min(x)) / (max(x) - min(x))
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
         self.weights = np.ones(2)
@@ -22,30 +23,19 @@ class Neuron1D:
         return
 
     def train(self):
-        sign = 1
-        prev_TE = 10000
-
+        sigma = self.y
         for i in range(self.max_epoch):
-            for w in range(2):
-                # Assess the Total Error of Changing
-                self.predict()
-                sigma = (self.real_y - self.y) ** 2
-                TE = sum(sigma)
-
-                # Check for convergence
-                if (TE < 50):
-                    print("Convergence Reached")
-                    return
-
-                # If TE increases, undo change
-                if(TE > prev_TE):
-                    sign *= -1
-                    prev_TE = TE
-
-                # If TE decreases, continue
-                if (TE < prev_TE):
-                    prev_TE = TE
-                self.weights[w] += self.alpha * sign * 1
+            # Assess the Total Error of Changing
+            self.predict()
+            sigma = (self.real_y - self.y)
+            for j in range(self.X.shape[1]):
+                # We consider each feature to's value to adjust the weight
+                # sigma[i] = error for that data point
+                # alpha = learning constant
+                # self.X[k][i] = feature k's prediction value
+                self.weights += self.alpha * sigma[j] * self.X[0][j]
+                self.weights[1] += self.alpha * sigma[j] * self.X[1][j]
+        self.TE = sum(sigma)
         return
 
     def test(self):
@@ -57,16 +47,19 @@ class Neuron1D:
         for i in range(self.X.shape[1]):
             totalError += (self.y[i] - self.real_y[i])**2
         print(f"Total Error: {totalError} \nWeights: {self.weights[0]} {self.weights[1]}\n\n")
-        # Plot Results - Still needs the prediction line
-        plt.scatter(self.x, self.y, c='g')
-        plt.scatter(self.x, self.real_y, c='b')
-        plt.show()
         return totalError
 
     def predict(self):
         for i in range(self.x.shape[0]):
             # y = mx + b
             self.y[i] = (self.weights[1] * self.X[1][i]) + self.weights[0]
+        return
+
+    def plot(self):
+        # Plot Results - Still needs the prediction line
+        plt.scatter(self.x, self.y, c='g')
+        plt.scatter(self.x, self.real_y, c='b')
+        plt.show()
         return
 
 
@@ -79,6 +72,7 @@ class Neuron2D:
         self.epsilon = epsilon
         self.raw_data = raw_data = np.genfromtxt(csv_path, delimiter=",")
         self.x = x = raw_data[:, 0]
+        self.x = (self.x - min(x)) / (max(x) - min(x))
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
         self.weights = np.ones(3)
@@ -86,31 +80,18 @@ class Neuron2D:
         return
 
     def train(self):
-        sign = 1
-        prev_TE = 10000
-
         for i in range(self.max_epoch):
-            # Assess the Total Error
+            # Assess the Total Error of Changing
             self.predict()
-            sigma = (self.real_y - self.y) ** 2
-            TE = sum(sigma)
-
-            # Check for convergence
-            if (TE < 50):
-                print("Convergence Reached")
-                return
-
-            # If TE increases, reverse direction
-            if(TE > prev_TE):
-                sign *= -1
-                prev_TE = TE
-
-            # If TE decreases, continue
-            if (TE < prev_TE):
-                prev_TE = TE
-            self.weights[0] += self.alpha * sign * 1
-            self.weights[1] += self.alpha * sign * sum(self.X[1, :])
-            self.weights[2] += self.alpha * sign * sum(self.X[2, :])
+            sigma = (self.real_y - self.y)
+            for j in range(self.X.shape[1]):
+                # We consider each feature to's value to adjust the weight
+                # sigma[i] = error for that data point
+                # alpha = learning constant
+                # self.X[k][i] = feature k's prediction value
+                self.weights += self.alpha * sigma[j] * self.X[0][j]
+                self.weights[1] += self.alpha * sigma[j] * self.X[1][j]
+                self.weights[2] += self.alpha * sigma[j] * self.X[2][j]
         return
 
     def test(self):
@@ -145,6 +126,7 @@ class Neuron3D:
         self.epsilon = epsilon
         self.raw_data = raw_data = np.genfromtxt(csv_path, delimiter=",")
         self.x = x = raw_data[:, 0]
+        self.x = (self.x - min(self.x)) / (max(self.x) - min(self.x))
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
         self.weights = np.ones(4)
@@ -153,31 +135,21 @@ class Neuron3D:
 
 
     def train(self):
-        sign = 1
-        prev_TE = 10000
-
         for i in range(self.max_epoch):
-            # Assess the Total Error
+            # Assess the Total Error of Changing
             self.predict()
-            sigma = (self.real_y - self.y) ** 2
-            TE = sum(sigma)
+            sigma = (self.real_y - self.y)
+            for j in range(self.X.shape[1]):
+                # We consider each feature to's value to adjust the weight
+                # sigma[i] = error for that data point
+                # alpha = learning constant
+                # self.X[k][i] = feature k's prediction value
+                # sign = the sign of the change in sigma
 
-            # Check for convergence
-            if (TE < 50):
-                print("Convergence Reached")
-                return
-
-            # If TE increases, reverse direction
-            if(TE > prev_TE):
-                sign *= -1
-                prev_TE = TE
-
-            # If TE decreases, continue
-            if (TE < prev_TE):
-                prev_TE = TE
-            self.weights[0] += self.alpha * sign * 1
-            self.weights[1] += self.alpha * sign * sum(self.X[1, :])
-            self.weights[2] += self.alpha * sign * sum(self.X[2, :])
+                self.weights += self.alpha * sigma[j] * self.X[0][j]
+                self.weights[1] += self.alpha * sigma[j] * self.X[1][j]
+                self.weights[2] += self.alpha * sigma[j] * self.X[2][j]
+                self.weights[3] += self.alpha * sigma[j] * self.X[3][j]
         return
 
     def test(self):
@@ -196,19 +168,46 @@ class Neuron3D:
         return totalError
 
     def predict(self):
-        for i in range(self.x.shape[0]):
+        for i in range(self.X.shape[1]):
             # y = mx + b
             self.y[i] = (self.weights[3] * self.X[3][i]) + (self.weights[2] * self.X[2][i]) + (self.weights[1] * self.X[1][i]) + self.weights[0]
         return
 
 
 # Main Script #
-obj1 = Neuron1D('training_data.txt', 10000, 0.05, 0.0001)
-obj1.train()
-obj1.test()
-# obj2 = Neuron2D('training_data.txt', 10000, 0.05, 0.000001)
-# obj3 = Neuron3D('training_data.txt', 100000, 0.05, 0.000000001)
 
+# Grid Search to Identify Best Alpha Values
+
+# Create the Testing Grid
+alpha_arr = np.arange(start=0.01, stop=0.001, step=-0.0005)
+epoch_arr = np.arange(start=500, stop=5000, step=500)
+min_TE = 500
+best_alpha = 0
+best_epoch = 0
+
+for alpha_index in range(alpha_arr.shape[0]):
+    for epoch_index in range(epoch_arr.shape[0]):
+        obj1 = Neuron1D('training_data.txt', epoch_arr[epoch_index], 50, alpha_arr[alpha_index])
+        obj1.train()
+        if obj1.test() < min_TE:
+            temp = min_TE
+            delta_E = min_TE - obj1.test()
+            best_alpha = obj1.alpha
+            best_epoch = obj1.max_epoch
+            if delta_E < 5:
+                break
+
+print(alpha_arr)
+print(epoch_arr)
+
+
+
+# obj2 = Neuron2D('training_data.txt', 10000, 0.05, 0.0001)
+# obj2.train()
+# obj2.test()
+# obj3 = Neuron3D('training_data.txt', 10000, 0.05, 0.001)
+# obj3.train()
+# obj3.test()
 
 
 
