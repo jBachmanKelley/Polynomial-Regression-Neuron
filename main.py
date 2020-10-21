@@ -15,6 +15,7 @@ class Neuron1D:
         self.epsilon = epsilon
         self.raw_data = raw_data = np.genfromtxt(csv_path, delimiter=",")
         self.x = x = raw_data[:, 0]
+        self.x = (self.x - min(x)) / (max(x) - min(x))
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
         self.weights = np.ones(2)
@@ -69,6 +70,7 @@ class Neuron2D:
         self.epsilon = epsilon
         self.raw_data = raw_data = np.genfromtxt(csv_path, delimiter=",")
         self.x = x = raw_data[:, 0]
+        self.x = (self.x - min(x)) / (max(x) - min(x))
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
         self.weights = np.ones(3)
@@ -122,25 +124,26 @@ class Neuron3D:
         self.epsilon = epsilon
         self.raw_data = raw_data = np.genfromtxt(csv_path, delimiter=",")
         self.x = x = raw_data[:, 0]
+        self.x = (self.x - min(x)) / (max(x) - min(x))
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
-        self.weights = np.ones(4) * 0.5
+        self.weights = np.ones(4)
         self.X = np.vstack([np.ones(x.shape[0]), self.x, self.x**2, self.x**3])
         return
 
 
     def train(self):
         for i in range(self.max_epoch):
+            # Assess the Total Error of Changing
             self.predict()
             sigma = (self.real_y - self.y)
-            for j in range(self.X.shape[1]):
-                # Assess the Total Error of Changing
-
-
+            for j in range(1, self.X.shape[1] - 1):
                 # We consider each feature to's value to adjust the weight
                 # sigma[i] = error for that data point
                 # alpha = learning constant
                 # self.X[k][i] = feature k's prediction value
+                # sign = the sign of the change in sigma
+
                 self.weights += self.alpha * sigma[j] * self.X[0][j]
                 self.weights[1] += self.alpha * sigma[j] * self.X[1][j]
                 self.weights[2] += self.alpha * sigma[j] * self.X[2][j]
@@ -176,9 +179,9 @@ obj1.test()
 obj2 = Neuron2D('training_data.txt', 10000, 0.05, 0.000001)
 obj2.train()
 obj2.test()
-#obj3 = Neuron3D('training_data.txt', 1000000, 0.05, 0.00000001)
-#obj3.train()
-#obj3.test()
+obj3 = Neuron3D('training_data.txt', 10000, 0.05, 0.00001)
+obj3.train()
+obj3.test()
 
 
 
