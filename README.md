@@ -1,6 +1,8 @@
 # Energy Prediction
  Single Neuron energy prediction with different linear-regression architectures
  
+Notes: https://docs.google.com/document/d/1VlLqnXYmSYs4ZkzZs4kjkdVLqgwcYdYf5XN128fJrHQ/edit?usp=sharing
+ 
 Hi there, 
 
 John Kelley is inviting you to a scheduled Zoom meeting. 
