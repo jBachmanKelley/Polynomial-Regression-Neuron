@@ -26,11 +26,10 @@ class Neuron1D:
         prev_TE = 10000
 
         for i in range(self.max_epoch):
+            # Assess the Total Error of Changing
+            self.predict()
+            sigma = (self.real_y - self.y)
             for j in range(self.X.shape[1]):
-                # Assess the Total Error of Changing
-                self.predict()
-                sigma = (self.real_y - self.y)
-
                 # We consider each feature to's value to adjust the weight
                 # sigma[i] = error for that data point
                 # alpha = learning constant
@@ -77,15 +76,11 @@ class Neuron2D:
         return
 
     def train(self):
-        sign = 1
-        prev_TE = 10000
-
         for i in range(self.max_epoch):
+            # Assess the Total Error of Changing
+            self.predict()
+            sigma = (self.real_y - self.y)
             for j in range(self.X.shape[1]):
-                # Assess the Total Error of Changing
-                self.predict()
-                sigma = (self.real_y - self.y)
-
                 # We consider each feature to's value to adjust the weight
                 # sigma[i] = error for that data point
                 # alpha = learning constant
@@ -129,7 +124,7 @@ class Neuron3D:
         self.x = x = raw_data[:, 0]
         self.real_y = raw_data[:, 1]
         self.y = np.zeros(x.shape[0])
-        self.weights = np.ones(4)
+        self.weights = np.ones(4) * 0.5
         self.X = np.vstack([np.ones(x.shape[0]), self.x, self.x**2, self.x**3])
         return
 
@@ -175,12 +170,12 @@ class Neuron3D:
 
 
 # Main Script #
-#obj1 = Neuron1D('training_data.txt', 10000, 0.05, 0.0001)
-#obj1.train()
-#obj1.test()
-#obj2 = Neuron2D('training_data.txt', 10000, 0.05, 0.000001)
-#obj2.train()
-#obj2.test()
+obj1 = Neuron1D('training_data.txt', 10000, 0.05, 0.0001)
+obj1.train()
+obj1.test()
+obj2 = Neuron2D('training_data.txt', 10000, 0.05, 0.000001)
+obj2.train()
+obj2.test()
 #obj3 = Neuron3D('training_data.txt', 1000000, 0.05, 0.00000001)
 #obj3.train()
 #obj3.test()
