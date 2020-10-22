@@ -165,15 +165,12 @@ class Neuron3D:
         return
 
     def test(self):
-        # Predict
         self.predict()
         self.assess_error()
-        # print(f"Total Error: {self.TE} \nWeights: {self.weights[0]} {self.weights[1]}\n\n")
         return
 
     def predict(self):
         for i in range(self.x.shape[0]):
-            # y = mx + b
             self.y[i] = (self.weights[3] * self.X[3][i]) + (self.weights[2] * self.X[2][i]) + (
                     self.weights[1] * self.X[1][i]) + self.weights[0]
         return
@@ -190,7 +187,6 @@ class Neuron3D:
 
     def assess_error(self):
         totalError = 0
-        # Assess T.E
         for i in range(self.X.shape[1]):
             totalError += (self.y[i] - self.real_y[i]) ** 2
         self.TE = totalError
@@ -198,6 +194,61 @@ class Neuron3D:
 
 
 # Main Script #
+
+# Section for Training then Testing with Only 1 Day #
+a1 = Neuron1D('train_data_1.txt', 1000, 0.01)
+a1.train()
+a1.test()
+a1.plot()
+print(a1.TE)
+
+b1 = Neuron2D('train_data_1.txt', 3000, 0.01)
+b1.train()
+b1.test()
+b1.plot()
+print(b1.TE)
+
+c1 = Neuron3D('train_data_1.txt', 75000, 0.01)
+c1.train()
+c1.test()
+c1.plot()
+print(c1.TE)
+
+a2 = Neuron1D('train_data_2.txt', 1000, 0.01)
+a2.train()
+a2.test()
+a2.plot()
+print(a2.TE)
+
+b2 = Neuron2D('train_data_2.txt', 3000, 0.01)
+b2.train()
+b2.test()
+b2.plot()
+print(b2.TE)
+
+c2 = Neuron3D('train_data_2.txt', 75000, 0.01)
+c2.train()
+c2.test()
+c2.plot()
+print(c2.TE)
+
+a3 = Neuron1D('train_data_3.txt', 1000, 0.01)
+a3.train()
+a3.test()
+a3.plot()
+print(a3.TE)
+
+b3 = Neuron2D('train_data_3.txt', 3000, 0.01)
+b3.train()
+b3.test()
+b3.plot()
+print(b3.TE)
+
+c3 = Neuron3D('train_data_3.txt', 75000, 0.01)
+c3.train()
+c3.test()
+c3.plot()
+print(c3.TE)
 
 # Section for Testing Against Day 4 #
 test1m = Neuron1D('training_data.txt', 1000, 0.01)
@@ -221,13 +272,7 @@ test3.test()
 test3.plot()
 print(f"Test-Error for Architecture C: {test3.TE}\n")
 
-
-
-
-
-# Grid Search to Identify Best Alpha Values #
-
-# Create the Testing Grid
+# Grid Search to Identify Best Alpha Values
 alpha_arr = np.arange(start=0.01, stop=0.001, step=-0.0005)
 epoch_arr = np.arange(start=500, stop=8000, step=500)
 best_alpha = 0.00001
