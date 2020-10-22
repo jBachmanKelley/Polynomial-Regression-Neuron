@@ -192,8 +192,8 @@ class Neuron3D:
 # Grid Search to Identify Best Alpha Values
 
 # Create the Testing Grid
-alpha_arr = np.arange(start=0.01, stop=0.0001, step=-0.00005)
-epoch_arr = np.arange(start=500, stop=10000, step=500)
+alpha_arr = np.arange(start=0.01, stop=0.001, step=-0.0005)
+epoch_arr = np.arange(start=500, stop=8000, step=500)
 best_alpha = 0.00001
 best_epoch = 10000
 
